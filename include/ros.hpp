@@ -59,6 +59,10 @@ using mirte_msgs_get_keypad = mirte_msgs::srv::GetKeypad;
 
 #elif TMX_ROS_VERSION == 1
 #include <ros/ros.h>
+
+#define create_service advertiseService
+#define create_subscription subscribe
+
 using node_handle =std::shared_ptr< ros::NodeHandle>;
 template <typename T> using publisher = ros::Publisher;
 template <typename T> using subscriber = ros::Subscriber;

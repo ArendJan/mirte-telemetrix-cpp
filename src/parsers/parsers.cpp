@@ -1,58 +1,26 @@
 #include "parsers/parsers.hpp"
 #include <set>
 
-#if ROS_VERSION == 2
-std::map<std::string, rclcpp::ParameterValue> get_params_name(
-  node_handle nh,
-  std::string name)
-{
-  auto node_parameters_iface = nh->get_node_parameters_interface();
-  auto parameter_overrides =
-    node_parameters_iface->get_parameter_overrides();
-  decltype(parameter_overrides) out_params;
-  for (auto & servo_it : parameter_overrides) {
-//     std::cout << servo_it.first << std::endl;
-    rclcpp::ParameterValue servo_config = servo_it.second;
-    if (starts_with(servo_it.first, name) ) {
-      out_params[servo_it.first] = servo_config;
-    }
-  }
-  return out_params;
-}
-
-std::set<std::string> get_params_key_names(
-  node_handle nh,
-  std::string name)
-{
-  auto node_parameters_iface = nh->get_node_parameters_interface();
-  auto parameter_overrides =
-    node_parameters_iface->get_parameter_overrides();
-  std::set<std::string> out_params;
-  for (auto & servo_it : parameter_overrides) {
-//     std::cout << servo_it.first << std::endl;
-    rclcpp::ParameterValue servo_config = servo_it.second;
-
-    if (starts_with(servo_it.first, name) ) {
-      std::cout << servo_it.first << std::endl;
-      std::string key = servo_it.first.substr(name.length() + 1);
-      std::cout << "1:" << key << std::endl;
-      auto next_dot = key.find(".");
-      key = key.substr(0, next_dot);
-      std::cout << "2:" << key << "," << next_dot << std::endl;
-
-      out_params.insert(key);
-    }
-  }
-  return out_params;
-}
+  
 
 
 Parser::Parser(node_handle nh)
 {
   this->nh = nh;
+  #if TMX_ROS_VERSION == 2
   auto node_parameters_iface = nh->get_node_parameters_interface();
   auto parameter_overrides =
     node_parameters_iface->get_parameter_overrides();
+  #else
+  std::vector<std::string> keys;
+nh.getParamNames(keys);
+  std::map<std::string, std::string> parameter_overrides;
+  for(auto key : keys) {
+    std::string val;
+    nh->getParam(key, val);
+    parameter_overrides[key] = val;
+  }
+  #endif
   this->params = parameter_overrides;
 }
 
@@ -99,9 +67,4 @@ std::string get_string(rclcpp::ParameterValue param) {
   } else {
     return rclcpp::to_string(param);
   }
-}
-
-#else 
-
-
-#endif
+} 

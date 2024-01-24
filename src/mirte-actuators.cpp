@@ -46,14 +46,14 @@ Motor::get_motors(node_handle nh, std::shared_ptr<TMX> tmx,
   return motors;
 }
 bool Motor::service_callback(
-    const std::shared_ptr<mirte_msgs::srv::SetMotorSpeed::Request> req,
-    std::shared_ptr<mirte_msgs::srv::SetMotorSpeed::Response> res) {
+    const std::shared_ptr<mirte_msgs_set_motor_speed::Request> req,
+    std::shared_ptr<mirte_msgs_set_motor_speed::Response> res) {
   this->set_speed(req->speed);
   res->status = true;
   return true;
 }
 
-void Motor::motor_callback(const std_msgs::msg::Int32 &msg) {
+void Motor::motor_callback(const std_msgs_int32 &msg) {
   this->set_speed(msg.data);
 }
 
@@ -62,12 +62,12 @@ Motor::Motor(node_handle nh, std::shared_ptr<TMX> tmx,
              std::shared_ptr<Motor_data> motor_data, std::string name,
              std::vector<pin_t> pins)
     : Mirte_Actuator(nh, tmx, board, pins, name) {
-  motor_service = nh->create_service<mirte_msgs::srv::SetMotorSpeed>(
+  motor_service = nh->create_service<mirte_msgs_set_motor_speed>(
       "/mirte/set_" + this->name + "_speed",
       std::bind(&Motor::service_callback, this, std::placeholders::_1,
                 std::placeholders::_2));
 
-  ros_client = nh->create_subscription<std_msgs::msg::Int32>(
+  ros_client = nh->create_subscription<std_msgs_int32>(
       "/mirte/motor_" + this->name + "_speed", 1000,
       std::bind(&Motor::motor_callback, this, std::placeholders::_1));
   this->motor_data = motor_data;

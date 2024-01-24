@@ -6,7 +6,7 @@
   <maintainer email="tmxcpp@arend-jan.com">Arend-Jan van Hilten</maintainer> 
   <license>AGPL</license>
   <depend>boost</depend>
-  <exec_depend>rclpy</exec_depend>
+  
   <depend>std_msgs</depend>
   <depend>mirte_msgs</depend>
   <depend>sensor_msgs</depend>

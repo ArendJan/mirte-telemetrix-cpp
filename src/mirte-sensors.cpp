@@ -18,7 +18,7 @@ Mirte_Sensors::Mirte_Sensors(node_handle nh, std::shared_ptr<TMX> tmx,
       std::chrono::milliseconds(1000 / parser->get_frequency()),
       std::bind(&Mirte_Sensors::publish, this));
 
-  this->pin_service = nh->create_service<mirte_msgs_get_pin_value>(
+  this->pin_service = nh->create_service(
       "/mirte/get_pin_value",
       std::bind(&Mirte_Sensors::pin_callback, this, std::placeholders::_1,
                 std::placeholders::_2));
