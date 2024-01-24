@@ -1,6 +1,6 @@
 #include "mirte-actuators.hpp"
 
-Mirte_Actuators::Mirte_Actuators(std::shared_ptr<rclcpp::Node> nh,
+Mirte_Actuators::Mirte_Actuators(node_handle nh,
                                  std::shared_ptr<TMX> tmx,
                                  std::shared_ptr<Mirte_Board> board,
                                  std::shared_ptr<Parser> parser) {
@@ -12,7 +12,7 @@ Mirte_Actuators::Mirte_Actuators(std::shared_ptr<rclcpp::Node> nh,
   auto motors = Motor_data::parse_motor_data(parser, board);
 }
 
-Mirte_Actuator::Mirte_Actuator(std::shared_ptr<rclcpp::Node> nh,
+Mirte_Actuator::Mirte_Actuator(node_handle nh,
                                std::shared_ptr<TMX> tmx,
                                std::shared_ptr<Mirte_Board> board,
                                std::vector<pin_t> pins, std::string name) {
@@ -23,7 +23,7 @@ Mirte_Actuator::Mirte_Actuator(std::shared_ptr<rclcpp::Node> nh,
   this->name = name;
 }
 std::vector<std::shared_ptr<Mirte_Actuator>>
-Motor::get_motors(std::shared_ptr<rclcpp::Node> nh, std::shared_ptr<TMX> tmx,
+Motor::get_motors(node_handle nh, std::shared_ptr<TMX> tmx,
                   std::shared_ptr<Mirte_Board> board,
                   std::shared_ptr<Parser> parser) {
   std::vector<std::shared_ptr<Mirte_Actuator>> motors;
@@ -57,7 +57,7 @@ void Motor::motor_callback(const std_msgs::msg::Int32 &msg) {
   this->set_speed(msg.data);
 }
 
-Motor::Motor(std::shared_ptr<rclcpp::Node> nh, std::shared_ptr<TMX> tmx,
+Motor::Motor(node_handle nh, std::shared_ptr<TMX> tmx,
              std::shared_ptr<Mirte_Board> board,
              std::shared_ptr<Motor_data> motor_data, std::string name,
              std::vector<pin_t> pins)
@@ -74,7 +74,7 @@ Motor::Motor(std::shared_ptr<rclcpp::Node> nh, std::shared_ptr<TMX> tmx,
   this->max_pwm = board->get_max_pwm();
 }
 
-DPMotor::DPMotor(std::shared_ptr<rclcpp::Node> nh, std::shared_ptr<TMX> tmx,
+DPMotor::DPMotor(node_handle nh, std::shared_ptr<TMX> tmx,
                  std::shared_ptr<Mirte_Board> board,
                  std::shared_ptr<Motor_data> motor_data, std::string name)
     : Motor(nh, tmx, board, motor_data, name,
@@ -100,7 +100,7 @@ void DPMotor::set_speed(int speed) {
   // tmx->set_digital_pwm(pins[0], speed);
 }
 
-PPMotor::PPMotor(std::shared_ptr<rclcpp::Node> nh, std::shared_ptr<TMX> tmx,
+PPMotor::PPMotor(node_handle nh, std::shared_ptr<TMX> tmx,
                  std::shared_ptr<Mirte_Board> board,
                  std::shared_ptr<Motor_data> motor_data, std::string name)
     : Motor(nh, tmx, board, motor_data, name,

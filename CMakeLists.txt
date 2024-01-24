@@ -7,8 +7,24 @@ add_compile_options(-std=c++17)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(ament_cmake REQUIRED)
-find_package(rclcpp REQUIRED)
+set(ROS_VERSION $ENV{ROS_VERSION})
+
+if(ROS_VERSION EQUAL 2)
+  message(STATUS "ROS2")
+  find_package(ament_cmake REQUIRED)
+  find_package(rclcpp REQUIRED)
+
+else()
+  message(STATUS "ROS1")
+  find_package(catkin REQUIRED COMPONENTS
+  roscpp
+  std_msgs
+  mirte_msgs
+  sensor_msgs
+)
+  
+endif()
+
 find_package(mirte_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
@@ -66,11 +82,28 @@ add_executable(${PROJECT_NAME}_node
     libs/tmx-cpp/libs/async_serial/AsyncSerial.cpp
     libs/tmx-cpp/libs/async_serial/BufferedAsyncSerial.cpp
 )
+if(ROS_VERSION EQUAL 2)
+  message(STATUS "ROS2")
+  add_definitions(-DROS2)
 ament_target_dependencies(
   ${PROJECT_NAME}_node
    std_msgs mirte_msgs rclcpp sensor_msgs
 #  DEPENDS system_lib
 ) 
+else()
+  message(STATUS "ROS1")
+  find_package(catkin REQUIRED COMPONENTS
+  roscpp
+  std_msgs
+  mirte_msgs
+  sensor_msgs
+)
+add_dependencies(${PROJECT_NAME}_node ${catkin_EXPORTED_TARGETS})
+target_link_libraries(${PROJECT_NAME}_node
+   ${catkin_LIBRARIES}
+ )
+
+   endif()
 find_package(Boost REQUIRED COMPONENTS system thread)
 
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} )
@@ -104,7 +137,11 @@ install(TARGETS
 ## EXPORTS
 # ament_export_targets(
 #   ${PROJECT_NAME}_node HAS_LIBRARY_TARGET)
+
+if(ROS_VERSION EQUAL 2)
+ 
 ament_export_dependencies(${THIS_PACKAGE_INCLUDE_DEPENDS})
+
 install(DIRECTORY
   launch
   DESTINATION share/${PROJECT_NAME}/
@@ -114,3 +151,13 @@ install(DIRECTORY
   DESTINATION share/${PROJECT_NAME}/
 )
 ament_package()
+else()
+catkin_package(
+  INCLUDE_DIRS include
+#  LIBRARIES mirte_ros_package
+  CATKIN_DEPENDS roscpp std_msgs mirte_msgs sensor_msgs
+#  DEPENDS system_lib
+)
+
+
+endif()

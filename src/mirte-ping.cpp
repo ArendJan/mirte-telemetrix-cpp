@@ -1,6 +1,6 @@
 #include "mirte-ping.hpp"
 
-Mirte_Ping::Mirte_Ping(std::shared_ptr<rclcpp::Node> nh,
+Mirte_Ping::Mirte_Ping(node_handle nh,
                        std::shared_ptr<TMX> tmx,
                        std::function<void()> stop_func) {
   this->tmx = tmx;

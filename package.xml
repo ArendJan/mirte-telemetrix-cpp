@@ -7,16 +7,19 @@
   <license>AGPL</license>
   <depend>boost</depend>
   <exec_depend>rclpy</exec_depend>
-  <exec_depend>std_msgs</exec_depend>
-  <exec_depend>mirte_msgs</exec_depend>
+  <depend>std_msgs</depend>
+  <depend>mirte_msgs</depend>
   <depend>sensor_msgs</depend>
+  <depend>roscpp</depend>
   <!-- <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
   <test_depend>ament_pep257</test_depend>
   <test_depend>python3-pytest</test_depend>
  -->
-  <export>
+ <buildtool_depend>catkin</buildtool_depend>
+
+  <!-- <export>
     <build_type>ament_cmake</build_type>
-  </export>
+  </export> -->
 
 </package>

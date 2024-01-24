@@ -13,7 +13,7 @@ public:
   node_handle nh;
   std::shared_ptr<Mirte_Board> board;
   std::vector<std::shared_ptr<Mirte_Sensor>> sensors;
-  rclcpp::TimerBase::SharedPtr timer;
+  ros_timer timer;
   void publish();
   void stop();
 
@@ -36,8 +36,8 @@ public:
   std::string name;
   virtual void stop() {}
   auto get_header() {
-    std_msgs::msg::Header header;
-    header.stamp = nh->now();
+    std_msgs_header header;
+    // header.stamp = nh->now();
 
     return header;
   }
@@ -53,9 +53,10 @@ public:
                 std::shared_ptr<Keypad_data> keypad_data);
   void publish();
   std::shared_ptr<Keypad_data> keypad_data;
-  rclcpp::Publisher<mirte_msgs::msg::Keypad>::SharedPtr keypad_pub;
-  rclcpp::Publisher<mirte_msgs::msg::Keypad>::SharedPtr keypad_pressed_pub;
-  rclcpp::Service<mirte_msgs::srv::GetKeypad>::SharedPtr keypad_service;
+  publisher<mirte_msgs_keypad> keypad_pub;
+  // publisher<mirte_msgs_keypad> keypad_pub;
+  publisher<mirte_msgs_keypad> keypad_pressed_pub;
+  service<mirte_msgs_get_keypad> keypad_service; 
   bool keypad_callback(
       const std::shared_ptr<mirte_msgs::srv::GetKeypad::Request> req,
       std::shared_ptr<mirte_msgs::srv::GetKeypad::Response> res);

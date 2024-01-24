@@ -1,7 +1,9 @@
 #include "parsers/parsers.hpp"
 #include <set>
+
+#if ROS_VERSION == 2
 std::map<std::string, rclcpp::ParameterValue> get_params_name(
-  std::shared_ptr<rclcpp::Node> nh,
+  node_handle nh,
   std::string name)
 {
   auto node_parameters_iface = nh->get_node_parameters_interface();
@@ -19,7 +21,7 @@ std::map<std::string, rclcpp::ParameterValue> get_params_name(
 }
 
 std::set<std::string> get_params_key_names(
-  std::shared_ptr<rclcpp::Node> nh,
+  node_handle nh,
   std::string name)
 {
   auto node_parameters_iface = nh->get_node_parameters_interface();
@@ -45,7 +47,7 @@ std::set<std::string> get_params_key_names(
 }
 
 
-Parser::Parser(std::shared_ptr<rclcpp::Node> nh)
+Parser::Parser(node_handle nh)
 {
   this->nh = nh;
   auto node_parameters_iface = nh->get_node_parameters_interface();
@@ -89,3 +91,17 @@ std::string Parser::build_param_name(std::string name, std::string key)
 {
   return name + "." + key;
 }
+
+
+std::string get_string(rclcpp::ParameterValue param) {
+  if (param.get_type() == rclcpp::ParameterType::PARAMETER_STRING) {
+    return param.get<std::string>();
+  } else {
+    return rclcpp::to_string(param);
+  }
+}
+
+#else 
+
+
+#endif

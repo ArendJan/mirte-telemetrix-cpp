@@ -1,6 +1,6 @@
 #pragma once
 
-#define TMX_ROS_VERSION 2
+#define TMX_ROS_VERSION 1
 #if TMX_ROS_VERSION == 2
 #include <rclcpp/rclcpp.hpp>
 
@@ -41,6 +41,68 @@ using mirte_msgs_get_intensity = mirte_msgs::srv::GetIntensity;
 #include "mirte_msgs/srv/get_pin_value.hpp"
 using mirte_msgs_get_pin_value = mirte_msgs::srv::GetPinValue;
 
-#elif TMX_ROS_VERSION == 1
+#include "std_msgs/msg/header.hpp"
+using std_msgs_header = std_msgs::msg::Header;
+#include "std_msgs/msg/int32.hpp"
+using std_msgs_int32 = std_msgs::msg::Int32;
 
+#include "mirte_msgs/srv/set_motor_speed.hpp"
+using mirte_msgs_set_motor_speed = mirte_msgs::srv::SetMotorSpeed;
+
+using ros_timer = rclcpp::TimerBase::SharedPtr;
+
+#include "mirte_msgs/msg/keypad.hpp"	
+using mirte_msgs_keypad = mirte_msgs::msg::Keypad;
+
+#include "mirte_msgs/srv/get_keypad.hpp"
+using mirte_msgs_get_keypad = mirte_msgs::srv::GetKeypad;
+
+#elif TMX_ROS_VERSION == 1
+#include <ros/ros.h>
+using node_handle =std::shared_ptr< ros::NodeHandle>;
+template <typename T> using publisher = ros::Publisher;
+template <typename T> using subscriber = ros::Subscriber;
+template <typename T> using service = ros::ServiceServer;
+
+//  message types
+#include "sensor_msgs/Range.h"
+using sensor_msgs_range = sensor_msgs::Range;
+
+#include "mirte_msgs/GetDistance.h"
+using mirte_msgs_get_distance = mirte_msgs::GetDistance;
+
+#include "std_msgs/Bool.h"
+using std_msgs_bool = std_msgs::Bool;
+
+#include "mirte_msgs/IntensityDigital.h"
+using mirte_msgs_intensity_digital = mirte_msgs::IntensityDigital;
+
+#include "mirte_msgs/Intensity.h"
+using mirte_msgs_intensity = mirte_msgs::Intensity;
+
+#include "mirte_msgs/GetIntensityDigital.h"
+using mirte_msgs_get_intensity_digital = mirte_msgs::GetIntensityDigital;
+
+#include "mirte_msgs/GetIntensity.h"
+using mirte_msgs_get_intensity = mirte_msgs::GetIntensity;
+
+#include "mirte_msgs/GetPinValue.h"
+using mirte_msgs_get_pin_value = mirte_msgs::GetPinValue;
+
+#include "std_msgs/Header.h"
+using std_msgs_header = std_msgs::Header;
+
+#include "std_msgs/Int32.h"
+using std_msgs_int32 = std_msgs::Int32;
+
+#include "mirte_msgs/SetMotorSpeed.h"
+using mirte_msgs_set_motor_speed = mirte_msgs::SetMotorSpeed;
+
+using ros_timer = ros::TimerEvent;
+
+#include "mirte_msgs/Keypad.h"
+using mirte_msgs_keypad = mirte_msgs::Keypad;
+
+#include "mirte_msgs/GetKeypad.h"
+using mirte_msgs_get_keypad = mirte_msgs::GetKeypad;
 #endif

@@ -1,9 +1,6 @@
 #pragma once
-#include "mirte_msgs/srv/set_motor_speed.hpp"
 #include "parsers/actuators.hpp"
-#include "rclcpp/rclcpp.hpp"
-#include "std_msgs/msg/header.hpp"
-#include "std_msgs/msg/int32.hpp"
+#include "ros.hpp"
 #include <memory>
 #include <mirte-board.hpp>
 #include <string>
@@ -12,11 +9,11 @@
 class Mirte_Actuator;
 class Mirte_Actuators {
 public:
-  Mirte_Actuators(std::shared_ptr<rclcpp::Node> nh, std::shared_ptr<TMX> tmx,
+  Mirte_Actuators(node_handle nh, std::shared_ptr<TMX> tmx,
                   std::shared_ptr<Mirte_Board> board,
                   std::shared_ptr<Parser> parser);
   std::shared_ptr<TMX> tmx;
-  std::shared_ptr<rclcpp::Node> nh;
+  node_handle nh;
   std::shared_ptr<Mirte_Board> board;
   std::vector<std::shared_ptr<Mirte_Actuator>> actuators;
 };
@@ -24,36 +21,37 @@ public:
 class Mirte_Actuator {
 public:
   std::shared_ptr<TMX> tmx;
-  std::shared_ptr<rclcpp::Node> nh;
+  node_handle nh;
   std::shared_ptr<Mirte_Board> board;
   std::vector<pin_t> pins;
   std::string name;
   auto get_header() {
-    std_msgs::msg::Header header;
-    header.stamp = nh->now();
+    std_msgs_header header;
+    // nh->
+    // header.stamp = nh->now();
 
     return header;
   }
-  Mirte_Actuator(std::shared_ptr<rclcpp::Node> nh, std::shared_ptr<TMX> tmx,
+  Mirte_Actuator(node_handle nh, std::shared_ptr<TMX> tmx,
                  std::shared_ptr<Mirte_Board> board, std::vector<pin_t> pins,
                  std::string name);
 };
 
 class Motor : public Mirte_Actuator {
 public:
-  Motor(std::shared_ptr<rclcpp::Node> nh, std::shared_ptr<TMX> tmx,
+  Motor(node_handle nh, std::shared_ptr<TMX> tmx,
         std::shared_ptr<Mirte_Board> board,
         std::shared_ptr<Motor_data> motor_data, std::string name,
         std::vector<pin_t> pins);
-  rclcpp::Service<mirte_msgs::srv::SetMotorSpeed>::SharedPtr motor_service;
+  service<mirte_msgs_set_motor_speed> motor_service;
   bool service_callback(
-      const std::shared_ptr<mirte_msgs::srv::SetMotorSpeed::Request> req,
-      std::shared_ptr<mirte_msgs::srv::SetMotorSpeed::Response> res);
-  void motor_callback(const std_msgs::msg::Int32 &msg);
+      const std::shared_ptr<mirte_msgs_set_motor_speed::Request> req,
+      std::shared_ptr<mirte_msgs_set_motor_speed::Response> res);
+  void motor_callback(const std_msgs_int32 &msg);
   int last_speed = 0;
-  rclcpp::Subscription<std_msgs::msg::Int32>::SharedPtr ros_client;
+  subscriber<std_msgs_int32> ros_client;
   static std::vector<std::shared_ptr<Mirte_Actuator>>
-  get_motors(std::shared_ptr<rclcpp::Node> nh, std::shared_ptr<TMX> tmx,
+  get_motors(node_handle nh, std::shared_ptr<TMX> tmx,
              std::shared_ptr<Mirte_Board> board,
              std::shared_ptr<Parser> parser);
   virtual void set_speed(int speed) = 0;
@@ -63,7 +61,7 @@ public:
 
 class PPMotor : public Motor {
 public:
-  PPMotor(std::shared_ptr<rclcpp::Node> nh, std::shared_ptr<TMX> tmx,
+  PPMotor(node_handle nh, std::shared_ptr<TMX> tmx,
           std::shared_ptr<Mirte_Board> board,
           std::shared_ptr<Motor_data> motor_data, std::string name);
   void set_speed(int speed);
@@ -73,7 +71,7 @@ public:
 
 class DPMotor : public Motor {
 public:
-  DPMotor(std::shared_ptr<rclcpp::Node> nh, std::shared_ptr<TMX> tmx,
+  DPMotor(node_handle nh, std::shared_ptr<TMX> tmx,
           std::shared_ptr<Mirte_Board> board,
           std::shared_ptr<Motor_data> motor_data, std::string name);
   void set_speed(int speed);
@@ -83,7 +81,7 @@ public:
 
 class DDPMotor : public Motor {
 public:
-  DDPMotor(std::shared_ptr<rclcpp::Node> nh, std::shared_ptr<TMX> tmx,
+  DDPMotor(node_handle nh, std::shared_ptr<TMX> tmx,
            std::shared_ptr<Mirte_Board> board,
            std::shared_ptr<Motor_data> motor_data, std::string name);
   void set_speed(int speed);

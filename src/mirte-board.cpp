@@ -34,10 +34,3 @@ Mirte_Board::create(std::shared_ptr<Parser> parser) {
   return nullptr;
 }
 
-std::string get_string(rclcpp::ParameterValue param) {
-  if (param.get_type() == rclcpp::ParameterType::PARAMETER_STRING) {
-    return param.get<std::string>();
-  } else {
-    return rclcpp::to_string(param);
-  }
-}
