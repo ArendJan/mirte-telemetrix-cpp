@@ -1,4 +1,12 @@
 #include <mirte_telemetrix_cpp/parsers/modules/ina226_data.hpp>
+#include <rclcpp/logging.hpp>
+#include <rclcpp/node.hpp>
+#include <rclcpp/parameter_value.hpp>
+
+#include "mirte_telemetrix_cpp/parsers/modules/i2c_module_data.hpp"
+#include "mirte_telemetrix_cpp/parsers/parsers.hpp"
+
+class Mirte_Board;
 
 INA226Data::INA226Data(
   std::shared_ptr<Parser> parser, std::shared_ptr<Mirte_Board> board, std::string name,

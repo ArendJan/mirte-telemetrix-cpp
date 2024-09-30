@@ -1,9 +1,28 @@
-#include <rclcpp/rclcpp.hpp>
-
 #include <mirte_telemetrix_cpp/sensors/encoder_monitor.hpp>
+#include <rcl/context.h>
+#include <mirte_msgs/msg/detail/encoder__struct.hpp>
+#include <mirte_msgs/srv/detail/get_encoder__struct.hpp>
+#include <rclcpp/node.hpp>
+#include <rclcpp/publisher.hpp>
+#include <rclcpp/qos_event.hpp>
+#include <array>
+#include <cstdint>
+#include <functional>
+#include <memory>
+#include <set>
+#include <string>
+#include <variant>
+#include <vector>
 
-#include <mirte_msgs/msg/encoder.hpp>
-#include <mirte_msgs/srv/get_encoder.hpp>
+#include "mirte_telemetrix_cpp/node_data.hpp"
+#include "mirte_telemetrix_cpp/parsers/device_data.hpp"
+#include "mirte_telemetrix_cpp/parsers/sensors/base_sensor_data.hpp"
+#include "mirte_telemetrix_cpp/parsers/sensors/encoder_data.hpp"
+#include "mirte_telemetrix_cpp/sensors/base_sensor.hpp"
+#include "rclcpp/node.hpp"
+#include "tmx_cpp/tmx.hpp"
+
+class Parser;
 
 EncoderMonitor::EncoderMonitor(NodeData node_data, EncoderData encoder_data)
 : Mirte_Sensor(node_data, {encoder_data.pinA, encoder_data.pinB}, (SensorData)encoder_data),

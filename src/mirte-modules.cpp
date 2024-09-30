@@ -1,10 +1,17 @@
 #include <mirte_telemetrix_cpp/mirte-modules.hpp>
-#include <mirte_telemetrix_cpp/util.hpp>
-
 #include <mirte_telemetrix_cpp/modules/hiwonder_module.hpp>
 #include <mirte_telemetrix_cpp/modules/ina226_module.hpp>
 #include <mirte_telemetrix_cpp/modules/pca_module.hpp>
 #include <mirte_telemetrix_cpp/modules/ssd1306_module.hpp>
+#include <rclcpp/logging.hpp>
+#include <rclcpp/node.hpp>
+#include <iostream>
+
+#include "mirte_telemetrix_cpp/node_data.hpp"
+#include "tmx_cpp/modules.hpp"
+#include "tmx_cpp/sensors.hpp"
+
+class Parser;
 
 Mirte_modules::Mirte_modules(NodeData node_data, std::shared_ptr<Parser> parser)
 : nh(node_data.nh), tmx(node_data.tmx), board(node_data.board)

@@ -1,6 +1,16 @@
 #pragma once
 
 #include <mirte_telemetrix_cpp/parsers/modules/i2c_module_data.hpp>
+#include <map>
+#include <memory>
+#include <set>
+#include <string>
+
+class Mirte_Board;
+class Parser;
+namespace rclcpp {
+class ParameterValue;
+}  // namespace rclcpp
 
 #ifdef WITH_GPIO
 #include <mirte_telemetrix_cpp/gpio_pin.hpp>

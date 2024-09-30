@@ -1,6 +1,40 @@
-#include <functional>
-
 #include <mirte_telemetrix_cpp/modules/hiwonder_module.hpp>
+#include <rcl/context.h>
+#include <boost/iterator/iterator_facade.hpp>
+#include <mirte_msgs/msg/detail/servo_position__struct.hpp>
+#include <mirte_msgs/srv/detail/get_servo_range__struct.hpp>
+#include <mirte_msgs/srv/detail/set_servo_angle__struct.hpp>
+#include <rclcpp/node.hpp>
+#include <rclcpp/publisher.hpp>
+#include <rclcpp/qos_event.hpp>
+#include <rclcpp/service.hpp>
+#include <std_msgs/msg/detail/header__struct.hpp>
+#include <std_srvs/srv/detail/set_bool__struct.hpp>
+#include <functional>
+#include <algorithm>
+#include <array>
+#include <cstdint>
+#include <iostream>
+#include <memory>
+#include <set>
+#include <string>
+#include <variant>
+#include <vector>
+
+#include "mirte_telemetrix_cpp/modules/base_module.hpp"
+#include "mirte_telemetrix_cpp/node_data.hpp"
+#include "mirte_telemetrix_cpp/parsers/modules/hiwonder_data.hpp"
+#include "mirte_telemetrix_cpp/parsers/modules/module_data.hpp"
+#include "mirte_telemetrix_cpp/parsers/p_modules.hpp"
+#include "mirte_telemetrix_cpp/parsers/parsers.hpp"
+#include "rclcpp/node.hpp"
+#include "tmx_cpp/modules.hpp"
+#include "tmx_cpp/modules/HiwonderServo.hpp"
+
+class Mirte_Board;
+namespace tmx_cpp {
+class TMX;
+}  // namespace tmx_cpp
 
 using namespace std::placeholders;  // for _1, _2, _3...
 

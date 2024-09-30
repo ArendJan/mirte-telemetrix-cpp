@@ -1,11 +1,29 @@
-#include <memory>
-#include <vector>
-
 #include <mirte_telemetrix_cpp/parsers/sensors/sonar_data.hpp>
 #include <mirte_telemetrix_cpp/sensors/sonar_monitor.hpp>
+#include <math.h>
+#include <rcl/context.h>
+#include <mirte_msgs/srv/detail/get_distance__struct.hpp>
+#include <rclcpp/node.hpp>
+#include <rclcpp/publisher.hpp>
+#include <rclcpp/qos_event.hpp>
+#include <sensor_msgs/msg/detail/range__struct.hpp>
+#include <memory>
+#include <vector>
+#include <array>
+#include <cstdint>
+#include <functional>
+#include <set>
+#include <string>
+#include <variant>
 
-#include <mirte_msgs/srv/get_distance.hpp>
-#include <sensor_msgs/msg/range.hpp>
+#include "mirte_telemetrix_cpp/node_data.hpp"
+#include "mirte_telemetrix_cpp/parsers/device_data.hpp"
+#include "mirte_telemetrix_cpp/parsers/sensors/base_sensor_data.hpp"
+#include "mirte_telemetrix_cpp/sensors/base_sensor.hpp"
+#include "rclcpp/node.hpp"
+#include "tmx_cpp/tmx.hpp"
+
+class Parser;
 
 std::vector<std::shared_ptr<SonarMonitor>> SonarMonitor::get_sonar_monitors(
   NodeData node_data, std::shared_ptr<Parser> parser)

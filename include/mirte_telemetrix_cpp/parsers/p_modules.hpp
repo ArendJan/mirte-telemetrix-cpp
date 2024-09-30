@@ -1,6 +1,14 @@
 #pragma once
+#include <stdint.h>
+#include <memory>
+#include <string>
+#include <vector>
+
 #include "mirte_telemetrix_cpp/mirte-board.hpp"
 #include "mirte_telemetrix_cpp/parsers/parsers.hpp"
+
+class Mirte_Board;
+class Parser;
 
 class Hiwonder_servo_data {
 public:

@@ -1,9 +1,16 @@
-#include <boost/format.hpp>
-
 #include <rcpputils/asserts.hpp>
-
 #include <mirte_telemetrix_cpp/parsers/device_data.hpp>
 #include <mirte_telemetrix_cpp/parsers/parsers.hpp>
+#include <boost/format.hpp>
+#include <boost/optional/optional.hpp>
+#include <rclcpp/parameter_value.hpp>
+#include <map>
+#include <memory>
+#include <ostream>
+#include <set>
+#include <string>
+
+class Mirte_Board;
 
 DeviceData::DeviceData(
   std::shared_ptr<Parser> parser, std::shared_ptr<Mirte_Board>, std::string name,

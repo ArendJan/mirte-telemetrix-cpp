@@ -2,6 +2,12 @@
 
 #include <mirte_telemetrix_cpp/device.hpp>
 #include <mirte_telemetrix_cpp/parsers/modules/module_data.hpp>
+#include <vector>
+
+#include "mirte_telemetrix_cpp/parsers/parsers.hpp"
+
+class ModuleData;
+struct NodeData;
 
 class Mirte_module : public TelemetrixDevice
 {

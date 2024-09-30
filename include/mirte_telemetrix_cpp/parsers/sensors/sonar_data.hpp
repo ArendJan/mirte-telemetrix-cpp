@@ -1,11 +1,19 @@
 #pragma once
 
+#include <mirte_telemetrix_cpp/mirte-board.hpp>
+#include <mirte_telemetrix_cpp/parsers/sensors/base_sensor_data.hpp>
 #include <memory>
 #include <vector>
+#include <map>
+#include <set>
+#include <string>
 
-#include <mirte_telemetrix_cpp/mirte-board.hpp>
+#include "mirte_telemetrix_cpp/parsers/parsers.hpp"
 
-#include <mirte_telemetrix_cpp/parsers/sensors/base_sensor_data.hpp>
+class Mirte_Board;
+namespace rclcpp {
+class ParameterValue;
+}  // namespace rclcpp
 
 class SonarData : public SensorData
 {

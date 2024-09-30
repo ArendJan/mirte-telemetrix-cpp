@@ -1,8 +1,21 @@
-#include <boost/format.hpp>
-
 #include <rcpputils/asserts.hpp>
-
 #include <mirte_telemetrix_cpp/parsers/modules/hiwonder_data.hpp>
+#include <boost/format.hpp>
+#include <boost/optional/optional.hpp>
+#include <rclcpp/logging.hpp>
+#include <rclcpp/node.hpp>
+#include <rclcpp/parameter_value.hpp>
+#include <map>
+#include <memory>
+#include <ostream>
+#include <set>
+#include <string>
+#include <vector>
+
+#include "mirte_telemetrix_cpp/mirte-board.hpp"
+#include "mirte_telemetrix_cpp/parsers/modules/module_data.hpp"
+#include "mirte_telemetrix_cpp/parsers/p_modules.hpp"
+#include "mirte_telemetrix_cpp/parsers/parsers.hpp"
 
 HiWonderBusData::HiWonderBusData(
   std::shared_ptr<Parser> parser, std::shared_ptr<Mirte_Board> board, std::string name,

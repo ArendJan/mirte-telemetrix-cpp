@@ -1,8 +1,16 @@
-#include <filesystem>
-
 #include <ament_index_cpp/get_package_share_directory.hpp>
-
 #include <mirte_telemetrix_cpp/parsers/modules/ssd1306_data.hpp>
+#include <rclcpp/parameter_value.hpp>
+#include <filesystem>
+#include <map>
+#include <memory>
+#include <set>
+#include <string>
+
+#include "mirte_telemetrix_cpp/parsers/modules/i2c_module_data.hpp"
+
+class Mirte_Board;
+class Parser;
 
 SSD1306Data::SSD1306Data(
   std::shared_ptr<Parser> parser, std::shared_ptr<Mirte_Board> board, std::string name,

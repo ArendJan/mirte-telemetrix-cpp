@@ -1,9 +1,19 @@
-#include <boost/algorithm/string.hpp>
-#include <boost/format.hpp>
-
-#include <rcpputils/asserts.hpp>
-
 #include <mirte_telemetrix_cpp/parsers/modules/pca_data.hpp>
+#include <rclcpp/logging.hpp>
+#include <rclcpp/node.hpp>
+#include <rclcpp/parameter_value.hpp>
+#include <algorithm>
+#include <iostream>
+#include <map>
+#include <memory>
+#include <set>
+#include <string>
+#include <vector>
+
+#include "mirte_telemetrix_cpp/parsers/modules/i2c_module_data.hpp"
+#include "mirte_telemetrix_cpp/parsers/parsers.hpp"
+
+class Mirte_Board;
 
 PCAData::PCAData(
   std::shared_ptr<Parser> parser, std::shared_ptr<Mirte_Board> board, std::string name,

@@ -1,8 +1,18 @@
-#include <boost/format.hpp>
-
 #include <rcpputils/asserts.hpp>
-
 #include <mirte_telemetrix_cpp/parsers/modules/i2c_module_data.hpp>
+#include <stdint.h>
+#include <boost/format.hpp>
+#include <boost/optional/optional.hpp>
+#include <rclcpp/parameter_value.hpp>
+#include <map>
+#include <memory>
+#include <ostream>
+#include <set>
+#include <string>
+
+#include "mirte_telemetrix_cpp/mirte-board.hpp"
+#include "mirte_telemetrix_cpp/parsers/modules/module_data.hpp"
+#include "mirte_telemetrix_cpp/parsers/parsers.hpp"
 
 I2CModuleData::I2CModuleData(
   std::shared_ptr<Parser> parser, std::shared_ptr<Mirte_Board> board, std::string name,

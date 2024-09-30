@@ -1,5 +1,16 @@
-#include <boost/algorithm/string.hpp>
 #include <mirte_telemetrix_cpp/parsers/actuators/motor_data.hpp>
+#include <boost/algorithm/string/case_conv.hpp>
+#include <rclcpp/logging.hpp>
+#include <rclcpp/node.hpp>
+#include <rclcpp/parameter_value.hpp>
+#include <map>
+#include <memory>
+#include <set>
+#include <string>
+
+#include "mirte_telemetrix_cpp/mirte-board.hpp"
+#include "mirte_telemetrix_cpp/parsers/device_data.hpp"
+#include "mirte_telemetrix_cpp/parsers/parsers.hpp"
 
 MotorData::MotorData(
   std::shared_ptr<Parser> parser, std::shared_ptr<Mirte_Board> board, std::string name,

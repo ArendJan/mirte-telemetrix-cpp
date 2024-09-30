@@ -1,5 +1,15 @@
 #include <mirte_telemetrix_cpp/mirte-board.hpp>
 #include <mirte_telemetrix_cpp/pcbs/v08.hpp>
+#include <stdint.h>
+#include <iostream>
+#include <map>
+#include <memory>
+#include <optional>
+#include <string>
+#include <utility>
+
+#include "mirte_telemetrix_cpp/pcbs/v06.hpp"
+#include "mirte_telemetrix_cpp/util.hpp"
 
 auto const DEFAULT_VERSION = 0.8;
 

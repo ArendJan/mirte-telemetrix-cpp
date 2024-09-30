@@ -1,10 +1,27 @@
 #pragma once
-#include "mirte_telemetrix_cpp/mirte-board.hpp"
 #include <tmx_cpp/tmx.hpp>
-
 #include <mirte_telemetrix_cpp/sensors/base_sensor.hpp>
-
 #include <mirte_msgs/srv/get_pin_value.hpp>
+#include <mirte_msgs/srv/detail/get_pin_value__struct.hpp>
+#include <rclcpp/timer.hpp>
+#include <map>
+#include <memory>
+#include <tuple>
+#include <vector>
+
+#include "mirte_telemetrix_cpp/mirte-board.hpp"
+#include "mirte_telemetrix_cpp/parsers/parsers.hpp"
+
+class Mirte_Board;
+class Mirte_Sensor;
+namespace rclcpp {
+class Node;
+template <typename ServiceT> class Service;
+}  // namespace rclcpp
+namespace tmx_cpp {
+class TMX;
+}  // namespace tmx_cpp
+struct NodeData;
 
 class Mirte_Sensors {
 public:

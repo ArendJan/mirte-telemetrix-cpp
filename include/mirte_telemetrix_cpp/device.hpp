@@ -2,16 +2,26 @@
 
 #pragma once
 
-#include <memory>
 #include <rclcpp/rclcpp.hpp>
-
 #include <tmx_cpp/tmx.hpp>
-
 #include <mirte_telemetrix_cpp/node_data.hpp>
 #include <mirte_telemetrix_cpp/mirte-board.hpp>
 #include <mirte_telemetrix_cpp/parsers/device_data.hpp>
-
 #include <std_msgs/msg/header.hpp>
+#include <rclcpp/node.hpp>
+#include <rclcpp/time.hpp>
+#include <std_msgs/msg/detail/header__struct.hpp>
+#include <memory>
+#include <cstdint>
+#include <string>
+#include <vector>
+
+class DeviceData;
+class Mirte_Board;
+namespace tmx_cpp {
+class TMX;
+}  // namespace tmx_cpp
+struct NodeData;
 
 // namespace mirte_telemetrix_cpp {
 

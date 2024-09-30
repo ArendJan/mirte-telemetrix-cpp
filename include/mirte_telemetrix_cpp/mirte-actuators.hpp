@@ -1,20 +1,31 @@
 #pragma once
-#include <memory>
-#include <string>
-#include <vector>
-
 #include <rclcpp/rclcpp.hpp>
-
 #include <mirte_telemetrix_cpp/mirte-board.hpp>
 #include <mirte_telemetrix_cpp/device.hpp>
 #include <mirte_telemetrix_cpp/node_data.hpp>
 #include <tmx_cpp/tmx.hpp>
-
 #include <mirte_msgs/srv/set_pin_value.hpp>
 #include <std_msgs/msg/header.hpp>
 #include <std_msgs/msg/int32.hpp>
+#include <mirte_msgs/srv/detail/set_pin_value__struct.hpp>
+#include <rclcpp/service.hpp>
+#include <memory>
+#include <string>
+#include <vector>
+
+#include "mirte_telemetrix_cpp/parsers/parsers.hpp"
 
 class Mirte_Actuator;
+class DeviceData;
+class Mirte_Board;
+namespace rclcpp {
+class Node;
+}  // namespace rclcpp
+namespace tmx_cpp {
+class TMX;
+}  // namespace tmx_cpp
+struct NodeData;
+
 class Mirte_Actuators
 {
 public:

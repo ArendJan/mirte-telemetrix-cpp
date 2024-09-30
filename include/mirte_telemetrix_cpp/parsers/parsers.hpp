@@ -1,11 +1,19 @@
 #pragma once
-#include "rclcpp/rclcpp.hpp"
-#include "mirte_telemetrix_cpp/util.hpp"
+#include <stdint.h>
+#include <rclcpp/parameter_value.hpp>
 #include <map>
 #include <memory>
 #include <set>
 #include <string>
 #include <vector>
+
+#include "rclcpp/rclcpp.hpp"
+#include "mirte_telemetrix_cpp/util.hpp"
+
+namespace rclcpp {
+class Node;
+}  // namespace rclcpp
+
 using pin_t = uint8_t;
 
 class Parser {

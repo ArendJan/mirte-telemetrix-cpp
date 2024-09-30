@@ -1,11 +1,31 @@
-#include <memory>
-
-#include <rclcpp/rclcpp.hpp>
-
 #include <mirte_telemetrix_cpp/sensors/keypad_monitor.hpp>
+#include <rcl/context.h>
+#include <mirte_msgs/msg/detail/keypad__struct.hpp>
+#include <mirte_msgs/srv/detail/get_keypad__struct.hpp>
+#include <rclcpp/node.hpp>
+#include <rclcpp/publisher.hpp>
+#include <rclcpp/qos_event.hpp>
+#include <rclcpp/time.hpp>
+#include <memory>
+#include <array>
+#include <cmath>
+#include <cstdint>
+#include <functional>
+#include <set>
+#include <string>
+#include <variant>
+#include <vector>
 
-#include <mirte_msgs/msg/keypad.hpp>
-#include <mirte_msgs/srv/get_keypad.hpp>
+#include "mirte_telemetrix_cpp/mirte-board.hpp"
+#include "mirte_telemetrix_cpp/node_data.hpp"
+#include "mirte_telemetrix_cpp/parsers/device_data.hpp"
+#include "mirte_telemetrix_cpp/parsers/sensors/base_sensor_data.hpp"
+#include "mirte_telemetrix_cpp/parsers/sensors/keypad_data.hpp"
+#include "mirte_telemetrix_cpp/sensors/base_sensor.hpp"
+#include "rclcpp/node.hpp"
+#include "tmx_cpp/tmx.hpp"
+
+class Parser;
 
 std::vector<std::shared_ptr<KeypadMonitor>> KeypadMonitor::get_keypad_monitors(
   NodeData node_data, std::shared_ptr<Parser> parser)

@@ -1,9 +1,11 @@
 #pragma once
 
 #include <boost/lexical_cast.hpp>
+#include <boost/detail/basic_pointerbuf.hpp>
 #include <optional>
 #include <string>
 #include <vector>
+
 inline std::optional<int> try_parse_int(std::string str) {
   try {
     return boost::lexical_cast<int>(str);

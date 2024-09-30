@@ -1,9 +1,11 @@
-#include "mirte_telemetrix_cpp/mirte-board.hpp" // for Mirte_Board_pico
-#include "mirte_telemetrix_cpp/util.hpp"        // for try_parse_int, starts_with
+#include <stdint.h>
 #include <iostream>        // for operator<<, endl, basic_ostream, ostream
 #include <map>             // for map
 #include <optional>        // for optional
 #include <string>          // for operator<<, string, allocator
+
+#include "mirte_telemetrix_cpp/mirte-board.hpp" // for Mirte_Board_pico
+#include "mirte_telemetrix_cpp/util.hpp"        // for try_parse_int, starts_with
 
 Mirte_Board_pico::Mirte_Board_pico() {}
 

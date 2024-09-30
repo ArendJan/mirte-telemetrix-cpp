@@ -1,13 +1,24 @@
 #pragma once
+#include <rclcpp/rclcpp.hpp>
+#include <mirte_telemetrix_cpp/mirte-board.hpp>
+#include <mirte_telemetrix_cpp/modules/base_module.hpp>
+#include <mirte_telemetrix_cpp/node_data.hpp>
 #include <memory>
 #include <string>
 #include <vector>
 
-#include <rclcpp/rclcpp.hpp>
-
-#include <mirte_telemetrix_cpp/mirte-board.hpp>
-#include <mirte_telemetrix_cpp/modules/base_module.hpp>
-#include <mirte_telemetrix_cpp/node_data.hpp>
+class Mirte_Board;
+class Mirte_module;
+class Parser;
+namespace rclcpp {
+class Node;
+}  // namespace rclcpp
+namespace tmx_cpp {
+class Modules;
+class Sensors;
+class TMX;
+}  // namespace tmx_cpp
+struct NodeData;
 
 class Mirte_modules
 {

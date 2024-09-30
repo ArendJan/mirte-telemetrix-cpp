@@ -1,8 +1,19 @@
 #include <mirte_telemetrix_cpp/mirte-actuators.hpp>
 #include <tmx_cpp/tmx.hpp>
-
 #include <mirte_telemetrix_cpp/actuators/motor.hpp>
 #include <mirte_telemetrix_cpp/actuators/servo.hpp>
+#include <rclcpp/node.hpp>
+#include <algorithm>
+#include <cstdint>
+#include <functional>
+#include <variant>
+
+#include "mirte_telemetrix_cpp/device.hpp"
+#include "mirte_telemetrix_cpp/mirte-board.hpp"
+#include "mirte_telemetrix_cpp/node_data.hpp"
+#include "mirte_telemetrix_cpp/parsers/device_data.hpp"
+#include "mirte_telemetrix_cpp/util.hpp"
+#include "rclcpp/node.hpp"
 
 Mirte_Actuators::Mirte_Actuators(NodeData node_data, std::shared_ptr<Parser> parser)
 : nh(node_data.nh), tmx(node_data.tmx), board(node_data.board)

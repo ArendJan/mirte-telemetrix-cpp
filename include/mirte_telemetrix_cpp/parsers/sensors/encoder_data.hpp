@@ -1,6 +1,17 @@
 #pragma once
 
 #include <mirte_telemetrix_cpp/parsers/sensors/base_sensor_data.hpp>
+#include <map>
+#include <memory>
+#include <set>
+#include <string>
+
+#include "mirte_telemetrix_cpp/parsers/parsers.hpp"
+
+class Mirte_Board;
+namespace rclcpp {
+class ParameterValue;
+}  // namespace rclcpp
 
 class EncoderData : public SensorData
 {

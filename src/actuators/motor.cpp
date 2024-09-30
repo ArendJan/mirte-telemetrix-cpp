@@ -1,7 +1,31 @@
-#include <vector>
-
 #include <mirte_telemetrix_cpp/actuators/motor.hpp>
 #include <mirte_telemetrix_cpp/mirte-actuators.hpp>
+#include <rcl/context.h>
+#include <stdint.h>
+#include <mirte_msgs/srv/detail/set_motor_speed__struct.hpp>
+#include <rclcpp/experimental/buffers/intra_process_buffer.hpp>
+#include <rclcpp/logging.hpp>
+#include <rclcpp/node.hpp>
+#include <rclcpp/qos_event.hpp>
+#include <rclcpp/service.hpp>
+#include <rclcpp/subscription.hpp>
+#include <std_msgs/msg/detail/int32__struct.hpp>
+#include <vector>
+#include <array>
+#include <functional>
+#include <iostream>
+#include <memory>
+#include <set>
+#include <string>
+#include <variant>
+
+#include "mirte_telemetrix_cpp/mirte-board.hpp"
+#include "mirte_telemetrix_cpp/node_data.hpp"
+#include "mirte_telemetrix_cpp/parsers/actuators/motor_data.hpp"
+#include "mirte_telemetrix_cpp/parsers/device_data.hpp"
+#include "mirte_telemetrix_cpp/parsers/parsers.hpp"
+#include "rclcpp/node.hpp"
+#include "tmx_cpp/tmx.hpp"
 
 std::vector<std::shared_ptr<Mirte_Actuator>> Motor::get_motors(
   NodeData node_data, std::shared_ptr<Parser> parser)

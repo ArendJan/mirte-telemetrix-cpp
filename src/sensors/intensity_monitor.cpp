@@ -1,12 +1,30 @@
+#include <mirte_telemetrix_cpp/sensors/intensity_monitor.hpp>
+#include <rcl/context.h>
+#include <mirte_msgs/msg/detail/intensity__struct.hpp>
+#include <mirte_msgs/msg/detail/intensity_digital__struct.hpp>
+#include <mirte_msgs/srv/detail/get_intensity__struct.hpp>
+#include <mirte_msgs/srv/detail/get_intensity_digital__struct.hpp>
+#include <rclcpp/node.hpp>
+#include <rclcpp/publisher.hpp>
+#include <rclcpp/qos_event.hpp>
+#include <rclcpp/service.hpp>
 #include <memory>
 #include <vector>
+#include <array>
+#include <cstdint>
+#include <functional>
+#include <set>
+#include <string>
+#include <variant>
 
-#include <rclcpp/rclcpp.hpp>
-
-#include <mirte_telemetrix_cpp/sensors/intensity_monitor.hpp>
-
-#include <mirte_msgs/msg/intensity.hpp>
-#include <mirte_msgs/msg/intensity_digital.hpp>
+#include "mirte_telemetrix_cpp/node_data.hpp"
+#include "mirte_telemetrix_cpp/parsers/device_data.hpp"
+#include "mirte_telemetrix_cpp/parsers/parsers.hpp"
+#include "mirte_telemetrix_cpp/parsers/sensors/base_sensor_data.hpp"
+#include "mirte_telemetrix_cpp/parsers/sensors/intensity_data.hpp"
+#include "mirte_telemetrix_cpp/sensors/base_sensor.hpp"
+#include "rclcpp/node.hpp"
+#include "tmx_cpp/tmx.hpp"
 
 IntensityMonitor::IntensityMonitor(
   NodeData node_data, std::vector<pin_t> pins, IntensityData intensity_data)

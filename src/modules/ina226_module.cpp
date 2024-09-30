@@ -1,6 +1,36 @@
 #include <stdint.h>
-
+#include <rcl/context.h>
+#include <stddef.h>
+#include <boost/iterator/iterator_facade.hpp>
+#include <rclcpp/duration.hpp>
+#include <rclcpp/node.hpp>
+#include <rclcpp/publisher.hpp>
+#include <rclcpp/qos_event.hpp>
+#include <rclcpp/service.hpp>
+#include <rclcpp/time.hpp>
+#include <sensor_msgs/msg/detail/battery_state__struct.hpp>
+#include <std_msgs/msg/detail/int32__struct.hpp>
+#include <std_srvs/srv/detail/set_bool__struct.hpp>
 #include <functional>
+#include <array>
+#include <iostream>
+#include <memory>
+#include <set>
+#include <string>
+#include <utility>
+#include <variant>
+#include <vector>
+
+#include "mirte_telemetrix_cpp/modules/base_module.hpp"
+#include "mirte_telemetrix_cpp/node_data.hpp"
+#include "mirte_telemetrix_cpp/parsers/modules/ina226_data.hpp"
+#include "mirte_telemetrix_cpp/parsers/modules/module_data.hpp"
+#include "mirte_telemetrix_cpp/parsers/parsers.hpp"
+#include "mirte_telemetrix_cpp/util.hpp"
+#include "rclcpp/node.hpp"
+#include "tmx_cpp/sensors.hpp"
+#include "tmx_cpp/sensors/INA226.hpp"
+#include "tmx_cpp/tmx.hpp"
 
 #ifdef WITH_GPIO
 #include <chrono>

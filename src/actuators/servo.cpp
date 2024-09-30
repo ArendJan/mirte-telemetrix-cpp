@@ -1,16 +1,26 @@
-#include <rclcpp/rclcpp.hpp>
-
-#include <mirte_msgs/srv/set_servo_angle.hpp>
-
 #include <mirte_telemetrix_cpp/actuators/servo.hpp>
-
 #include <tmx_cpp/tmx.hpp>
-
+#include <stdint.h>
+#include <mirte_msgs/srv/detail/get_servo_range__struct.hpp>
+#include <mirte_msgs/srv/detail/set_servo_angle__struct.hpp>
+#include <rclcpp/logging.hpp>
+#include <rclcpp/node.hpp>
+#include <rclcpp/service.hpp>
 #include <algorithm>
 #include <functional>
 #include <numbers>
+#include <memory>
+#include <set>
+#include <string>
+#include <variant>
+#include <vector>
 
 #include "mirte_telemetrix_cpp/mirte-actuators.hpp"
+#include "mirte_telemetrix_cpp/node_data.hpp"
+#include "mirte_telemetrix_cpp/parsers/actuators/servo_data.hpp"
+#include "mirte_telemetrix_cpp/parsers/device_data.hpp"
+#include "mirte_telemetrix_cpp/parsers/parsers.hpp"
+#include "rclcpp/node.hpp"
 
 Servo::Servo(NodeData node_data, ServoData servo_data)
 : Mirte_Actuator(node_data, {servo_data.pin}, (DeviceData)servo_data), data(servo_data)

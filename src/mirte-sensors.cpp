@@ -4,6 +4,21 @@
 #include <mirte_telemetrix_cpp/sensors/intensity_monitor.hpp>
 #include <mirte_telemetrix_cpp/sensors/keypad_monitor.hpp>
 #include <mirte_telemetrix_cpp/sensors/sonar_monitor.hpp>
+// #include <bits/chrono.h>
+#include <rclcpp/node.hpp>
+#include <algorithm>
+#include <compare>
+#include <functional>
+#include <iostream>
+#include <thread>
+#include <variant>
+
+#include "mirte_telemetrix_cpp/mirte-board.hpp"
+#include "mirte_telemetrix_cpp/node_data.hpp"
+#include "mirte_telemetrix_cpp/sensors/base_sensor.hpp"
+#include "mirte_telemetrix_cpp/util.hpp"
+#include "rclcpp/node.hpp"
+#include "tmx_cpp/tmx.hpp"
 
 Mirte_Sensors::Mirte_Sensors(NodeData node_data, std::shared_ptr<Parser> parser)
 : nh(node_data.nh), tmx(node_data.tmx), board(node_data.board)

@@ -1,23 +1,22 @@
-#include <stdint.h>  // for uint8_t
-
+#include <mirte_telemetrix_cpp/mirte-telemetrix.hpp>
+#include <rclcpp/node.hpp>          // for Node
+#include <rclcpp/node_options.hpp>  // for NodeOptions
+#include <rclcpp/utilities.hpp>     // for shutdown, init
+#include <rclcpp/executors/multi_threaded_executor.hpp>
 #include <exception>  // for exception
 #include <iostream>   // for operator<<, endl, basic_ostream
 #include <memory>     // for make_shared, shared_ptr, __shared...
-
-#include <mirte_telemetrix_cpp/mirte-telemetrix.hpp>
+#include <cstdint>
+#include <string>
+#include <vector>
 
 #include "mirte_telemetrix_cpp/mirte-actuators.hpp"  // for Mirte_Actuators
 #include "mirte_telemetrix_cpp/mirte-board.hpp"      // for Mirte_Board
 #include "mirte_telemetrix_cpp/mirte-modules.hpp"
 #include "mirte_telemetrix_cpp/mirte-sensors.hpp"    // for Mirte_Sensors
 #include "mirte_telemetrix_cpp/parsers/parsers.hpp"  // for Parser
-#include "mirte_telemetrix_cpp/util.hpp"
 #include "tmx_cpp/tmx.hpp"  // for TMX, TMX::GET_PICO_UNIQUE_ID, TMX...
-
-#include <rclcpp/executors.hpp>     // for spin
-#include <rclcpp/node.hpp>          // for Node
-#include <rclcpp/node_options.hpp>  // for NodeOptions
-#include <rclcpp/utilities.hpp>     // for shutdown, init
+#include "mirte_telemetrix_cpp/node_data.hpp"
 
 int main(int argc, char ** argv)
 {

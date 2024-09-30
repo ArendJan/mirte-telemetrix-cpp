@@ -3,6 +3,11 @@
 #include <mirte_telemetrix_cpp/device.hpp>
 #include <mirte_telemetrix_cpp/node_data.hpp>
 #include <mirte_telemetrix_cpp/parsers/sensors/base_sensor_data.hpp>
+#include <stdint.h>
+#include <vector>
+
+class SensorData;
+struct NodeData;
 
 // namespace mirte_telemetrix_cpp {
 

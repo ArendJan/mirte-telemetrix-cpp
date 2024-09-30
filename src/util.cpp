@@ -1,7 +1,9 @@
 #include "mirte_telemetrix_cpp/util.hpp"
 
-// #include <format> // Not yet available in Ubuntu 22.04, gcc is too low version
-#include <boost/format.hpp>
+#include <array>
+#include <cstdio>
+#include <memory>
+#include <stdexcept>
 
 std::string exec(const std::string &cmd) {
   std::array<char, 128> buffer;

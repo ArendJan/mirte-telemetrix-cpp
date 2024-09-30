@@ -1,6 +1,37 @@
-#include <functional>
-
 #include <mirte_telemetrix_cpp/modules/pca_module.hpp>
+// #include <bits/chrono.h>
+#include <rcl/context.h>
+#include <stdint.h>
+#include <boost/iterator/iterator_facade.hpp>
+#include <mirte_msgs/msg/detail/set_speed_named__struct.hpp>
+#include <mirte_msgs/srv/detail/set_motor_speed__struct.hpp>
+#include <mirte_msgs/srv/detail/set_speed_multiple__struct.hpp>
+#include <rclcpp/experimental/buffers/intra_process_buffer.hpp>
+#include <rclcpp/node.hpp>
+#include <rclcpp/qos_event.hpp>
+#include <rclcpp/service.hpp>
+#include <rclcpp/subscription.hpp>
+#include <rosidl_runtime_cpp/bounded_vector.hpp>
+#include <std_msgs/msg/detail/int32__struct.hpp>
+#include <functional>
+#include <array>
+#include <iostream>
+#include <memory>
+#include <set>
+#include <string>
+#include <thread>
+#include <variant>
+#include <vector>
+
+#include "mirte_telemetrix_cpp/modules/base_module.hpp"
+#include "mirte_telemetrix_cpp/node_data.hpp"
+#include "mirte_telemetrix_cpp/parsers/modules/module_data.hpp"
+#include "mirte_telemetrix_cpp/parsers/modules/pca_data.hpp"
+#include "mirte_telemetrix_cpp/parsers/parsers.hpp"
+#include "rclcpp/node.hpp"
+#include "tmx_cpp/modules.hpp"
+#include "tmx_cpp/modules/PCA9685.hpp"
+#include "tmx_cpp/tmx.hpp"
 
 using namespace std::placeholders;  // for _1, _2, _3...
 

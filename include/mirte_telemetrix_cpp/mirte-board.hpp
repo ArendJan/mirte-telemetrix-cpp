@@ -1,17 +1,22 @@
+#include <stdint.h>
 #include <map>
 #include <string>
+
+class Parser;
+
 using pin_map = std::map<std::string, std::string>;
 using connector_map = std::map<std::string, pin_map>;
 
 #ifndef MIRTE_BOARD_HPP
 #define MIRTE_BOARD_HPP
 
-#include "mirte_telemetrix_cpp/parsers/parsers.hpp"
-#include "mirte_telemetrix_cpp/pcbs/v06.hpp"
-#include "mirte_telemetrix_cpp/pcbs/v08.hpp"
 #include <map>    // for map, map<>::value_compare
 #include <memory> // for shared_ptr, __shared_ptr_access
 #include <string> // for string, basic_string, operator<
+
+#include "mirte_telemetrix_cpp/parsers/parsers.hpp"
+#include "mirte_telemetrix_cpp/pcbs/v06.hpp"
+#include "mirte_telemetrix_cpp/pcbs/v08.hpp"
 
 class Mirte_Board {
 public: 

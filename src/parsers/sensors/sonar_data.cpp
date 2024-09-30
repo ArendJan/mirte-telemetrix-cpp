@@ -1,4 +1,10 @@
 #include <mirte_telemetrix_cpp/parsers/sensors/sonar_data.hpp>
+#include <rclcpp/logging.hpp>
+#include <rclcpp/node.hpp>
+#include <rclcpp/parameter_value.hpp>
+
+#include "mirte_telemetrix_cpp/mirte-board.hpp"
+#include "mirte_telemetrix_cpp/parsers/sensors/base_sensor_data.hpp"
 
 SonarData::SonarData(
   std::shared_ptr<Parser> parser, std::shared_ptr<Mirte_Board> board, std::string name,

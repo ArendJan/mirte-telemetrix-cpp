@@ -1,3 +1,4 @@
+#pragma once
 #include "mirte_telemetrix_cpp/mirte-board.hpp"
 #include <map>
 #include <string>
