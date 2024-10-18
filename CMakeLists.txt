@@ -11,12 +11,12 @@ include(CheckIncludeFileCXX)
 set(MIRTE_EXTRA_LIBS "")
 
 # Use libgpiod for Mirte Master LED power indicator.
-check_include_file_cxx(gpiod.hpp HAVE_GPIOD_HPP)
-if(HAVE_GPIOD_HPP)
-  list(APPEND MIRTE_EXTRA_LIBS gpiodcxx)
-  add_compile_definitions(WITH_GPIO)
-  add_compile_options(-lgpiodcxx)
-endif()
+# check_include_file_cxx(gpiod.hpp HAVE_GPIOD_HPP)
+# if(HAVE_GPIOD_HPP)
+#   list(APPEND MIRTE_EXTRA_LIBS gpiodcxx)
+#   add_compile_definitions(WITH_GPIO)
+#   add_compile_options(-lgpiodcxx)
+# endif()
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # for iwyu, use iwyu_tool.py -p . -j 8
 if(CMAKE_EXPORT_COMPILE_COMMANDS)
