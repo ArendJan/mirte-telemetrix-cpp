@@ -13,13 +13,14 @@ MPU9250_sensor::MPU9250_sensor(
   tmx->setI2CPins(imu_data.sda, imu_data.scl, imu_data.port);
 
   this->mpu9250 = std::make_shared<tmx_cpp::MPU9250_module>(
-    imu_data.port, imu_data.addr, std::bind(&MPU9250_sensor::data_cb, this, _1, _2, _3, _4));
+    imu_data.port, imu_data.addr, std::bind(&MPU9250_sensor::data_callback, this, _1, _2, _3, _4));
 
-  imu_pub =
-    nh->create_publisher<sensor_msgs::msg::Imu>("imu/" + this->name + "/data", rclcpp::SystemDefaultsQoS());
+  imu_pub = nh->create_publisher<sensor_msgs::msg::Imu>(
+    "imu/" + this->name + "/data", rclcpp::SystemDefaultsQoS());
 
   imu_service = nh->create_service<mirte_msgs::srv::GetImu>(
-    "imu/" + this->name + "/get_data", std::bind(&MPU9250_sensor::get_imu_service_callback, this, _1, _2),
+    "imu/" + this->name + "/get_data",
+    std::bind(&MPU9250_sensor::get_imu_service_callback, this, _1, _2),
     rclcpp::ServicesQoS().get_rmw_qos_profile(), this->callback_group);
 
   //NOTE: There is some covariance between the axes, but this is often considered negligible.
@@ -35,10 +36,20 @@ MPU9250_sensor::MPU9250_sensor(
   sensors->add_sens(this->mpu9250);
 }
 
-void MPU9250_sensor::data_cb(
-  std::vector<float> acceleration, std::vector<float> gyro, std::vector<float> magnetic_field,
-  std::vector<float> quaternion)
+void MPU9250_sensor::update()
 {
+  if (msg_mutex.try_lock()) {
+    const std::lock_guard lock{msg_mutex, std::adopt_lock};
+    msg.header = get_header();
+    imu_pub->publish(msg);
+  }
+}
+
+void MPU9250_sensor::data_callback(
+  std::array<float, 3> acceleration, std::array<float, 3> gyro, std::array<float, 3> magnetic_field,
+  std::array<float, 4> quaternion)
+{
+  const std::lock_guard<std::mutex> lock(msg_mutex);
   msg.header = get_header();
 
   msg.linear_acceleration.x = acceleration[0] * 9.81;
@@ -55,12 +66,14 @@ void MPU9250_sensor::data_cb(
   msg.orientation.w = quaternion[3];
 
   imu_pub->publish(msg);
+  device_timer->reset();
 }
 
 void MPU9250_sensor::get_imu_service_callback(
-  const std::shared_ptr<mirte_msgs::srv::GetImu::Request> req,
-  std::shared_ptr<mirte_msgs::srv::GetImu::Response> res)
+  const mirte_msgs::srv::GetImu::Request::ConstSharedPtr req,
+  mirte_msgs::srv::GetImu::Response::SharedPtr res)
 {
+  const std::lock_guard<std::mutex> lock(msg_mutex);
   res->data = sensor_msgs::msg::Imu(msg);
 }
 

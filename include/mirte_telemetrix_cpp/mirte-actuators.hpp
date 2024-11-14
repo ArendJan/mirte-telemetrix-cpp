@@ -1,43 +1,41 @@
 #pragma once
 #include <memory>
-#include <rclcpp/callback_group.hpp>
 #include <string>
 #include <vector>
 
-#include <rclcpp/rclcpp.hpp>
+#include <rclcpp/callback_group.hpp>
+#include <rclcpp/node.hpp>
+#include <rclcpp/service.hpp>
 
-#include <mirte_telemetrix_cpp/mirte-board.hpp>
-#include <mirte_telemetrix_cpp/device.hpp>
-#include <mirte_telemetrix_cpp/node_data.hpp>
 #include <tmx_cpp/tmx.hpp>
 
-#include <mirte_msgs/srv/set_pin_value.hpp>
-#include <std_msgs/msg/header.hpp>
-#include <std_msgs/msg/int32.hpp>
+#include <mirte_telemetrix_cpp/device.hpp>
+#include <mirte_telemetrix_cpp/mirte-board.hpp>
+#include <mirte_telemetrix_cpp/node_data.hpp>
 
-class Mirte_Actuator;
-class Mirte_Actuators
-{
-public:
-  Mirte_Actuators(NodeData data, std::shared_ptr<Parser> parser);
+#include <mirte_msgs/srv/set_digital_pin_value.hpp>
+#include <mirte_msgs/srv/set_pwm_pin_value.hpp>
 
-  std::shared_ptr<tmx_cpp::TMX> tmx;
-  std::shared_ptr<rclcpp::Node> nh;
-  std::shared_ptr<Mirte_Board> board;
-  std::vector<std::shared_ptr<Mirte_Actuator>> actuators;
+class Mirte_Actuators {
+  public:
+    Mirte_Actuators(NodeData data, std::shared_ptr<Parser> parser);
 
-  rclcpp::Service<mirte_msgs::srv::SetPinValue>::SharedPtr set_pin_value_service;
+    std::shared_ptr<tmx_cpp::TMX> tmx;
+    std::shared_ptr<rclcpp::Node> nh;
+    std::shared_ptr<Mirte_Board> board;
+    std::vector<std::shared_ptr<TelemetrixDevice>> actuators;
 
-private:
-  void set_pin_value_service_callback(
-    const mirte_msgs::srv::SetPinValue::Request::ConstSharedPtr req,
-    mirte_msgs::srv::SetPinValue::Response::SharedPtr res);
-};
+  private:
+    // Service: set_digital_pin_value
+    rclcpp::Service<mirte_msgs::srv::SetDigitalPinValue>::SharedPtr digital_pin_service;
+    // Service: set_pwm_pin_value
+    rclcpp::Service<mirte_msgs::srv::SetPWMPinValue>::SharedPtr pwm_pin_service;
 
-class Mirte_Actuator: public TelemetrixDevice
-{
-public:
-  Mirte_Actuator(NodeData node_data, std::vector<pin_t> pins, DeviceData data);
-  Mirte_Actuator(NodeData node_data, std::vector<pin_t> pins, DeviceData data, rclcpp::CallbackGroupType callback_group_type);
-  virtual ~Mirte_Actuator() {}
+    void digital_pin_service_callback(
+      const mirte_msgs::srv::SetDigitalPinValue::Request::ConstSharedPtr req,
+      mirte_msgs::srv::SetDigitalPinValue::Response::SharedPtr res);
+
+    void pwm_pin_service_callback(
+      const mirte_msgs::srv::SetPWMPinValue::Request::ConstSharedPtr req,
+      mirte_msgs::srv::SetPWMPinValue::Response::SharedPtr res);
 };

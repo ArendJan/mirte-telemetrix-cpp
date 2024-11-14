@@ -16,7 +16,7 @@
 ServoBase::ServoBase(
   NodeData node_data, std::vector<pin_t> pins, ServoData servo_data,
   rclcpp::CallbackGroupType callback_group_type)
-: Mirte_Actuator(node_data, pins, (DeviceData)servo_data, callback_group_type), data(servo_data)
+: TelemetrixDevice(node_data, pins, (DeviceData)servo_data, callback_group_type), data(servo_data)
 {
   this->set_angle_service = nh->create_service<mirte_msgs::srv::SetServoAngle>(
     "servo/" + name + "/set_angle",
@@ -29,6 +29,8 @@ ServoBase::ServoBase(
     std::bind(
       &ServoBase::get_range_service_callback, this, std::placeholders::_1, std::placeholders::_2),
     rclcpp::ServicesQoS().get_rmw_qos_profile(), this->callback_group);
+
+  this->device_timer->cancel();
 }
 
 void ServoBase::set_angle_service_callback(

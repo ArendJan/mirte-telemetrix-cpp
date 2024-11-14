@@ -1,36 +1,44 @@
 #pragma once
 
+#include <chrono>
 #include <concepts>
 #include <map>
+#include <optional>
+#include <ratio>
 #include <set>
 #include <string>
 
 #include <rclcpp/parameter.hpp>
 
 #include <mirte_telemetrix_cpp/mirte-board.hpp>
+
 #include <mirte_telemetrix_cpp/parsers/parsers.hpp>
 
 // TODO: Wishlist: Add unused key warnings
 
-class DeviceData
-{
-public:
-  std::string name = "";
-  std::string frame_id = "";
+class DeviceData {
+  public:
+    std::string name = "";
+    std::string frame_id = "";
 
-  DeviceData(
-    std::shared_ptr<Parser> parser, std::shared_ptr<Mirte_Board> board, std::string name,
-    std::string device_type, std::map<std::string, rclcpp::ParameterValue> parameters,
-    std::set<std::string> & unused_keys);
+    using DeviceDuration = std::chrono::duration<double, std::milli>;
+    DeviceDuration duration;
 
-  DeviceData(std::string name, std::string frame_id = "");
+    DeviceData(
+      std::shared_ptr<Parser> parser, std::shared_ptr<Mirte_Board> board, std::string name,
+      std::string device_type, std::map<std::string, rclcpp::ParameterValue> parameters,
+      std::set<std::string> & unused_keys, std::optional<DeviceDuration> duration = {});
 
-  virtual bool check();
+    DeviceData(
+      std::string name, std::string frame_id = "",
+      DeviceDuration duration = DeviceDuration(10'000.0));
 
-  /// @brief Get the device class of this type. So 'distance' for sonars and 'keypad' for keypads, etc.
-  /// @return The device class string
-  static std::string get_device_class() { return "no_type"; }
-  virtual ~DeviceData(){};
+    virtual bool check();
+
+    /// @brief Get the device class of this type. So 'distance' for sonars and 'keypad' for keypads, etc.
+    /// @return The device class string
+    static std::string get_device_class() { return "no_type"; }
+    virtual ~DeviceData(){};
 };
 
 template <class T>

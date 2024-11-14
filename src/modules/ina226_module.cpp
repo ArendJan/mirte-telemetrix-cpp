@@ -1,6 +1,5 @@
-#include <stdint.h>
-
 #include <functional>
+#include <stdint.h>
 
 #ifdef WITH_GPIO
 #include <chrono>
@@ -22,7 +21,7 @@ INA226_sensor::INA226_sensor(
   this->total_used_mAh = 0;
 
   this->ina226 = std::make_shared<tmx_cpp::INA226_module>(
-    ina_data.port, ina_data.addr, std::bind(&INA226_sensor::data_cb, this, _1, _2));
+    ina_data.port, ina_data.addr, std::bind(&INA226_sensor::data_callback, this, _1, _2));
 
   // Use default QOS for sensor publishers as specified in REP2003
   this->battery_pub = nh->create_publisher<sensor_msgs::msg::BatteryState>(
@@ -32,11 +31,11 @@ INA226_sensor::INA226_sensor(
     "power/" + this->name + "/used", rclcpp::SystemDefaultsQoS());
 
   this->shutdown_service = nh->create_service<std_srvs::srv::SetBool>(
-    "power/" + this->name + "/shutdown", std::bind(&INA226_sensor::shutdown_robot_cb, this, _1, _2),
+    "power/" + this->name + "/shutdown",
+    std::bind(&INA226_sensor::shutdown_robot_service_callback, this, _1, _2),
     rclcpp::ServicesQoS().get_rmw_qos_profile(), this->callback_group);
 
   modules->add_sens(this->ina226);
-  // TODO: add used topic
   // TODO: add shutdown service
   // TODO: add auto shutdown
 
@@ -48,19 +47,28 @@ INA226_sensor::INA226_sensor(
 #endif
 }
 
-void INA226_sensor::data_cb(float voltage, float current)
+// TODO: Maybe add mutex lock-out although not fully necessary
+void INA226_sensor::update()
 {
-  voltage_ = voltage;
-  // std::cout << "INA226 data: " << current << " " << voltage << std::endl;
   auto msg = sensor_msgs::msg::BatteryState();
   msg.header = get_header();
 
-  msg.voltage = voltage;
-  msg.current = current;
-  msg.percentage = calc_soc(voltage);
+  msg.voltage = voltage_;
+  msg.current = current_;
+
+  msg.percentage = calc_soc(voltage_);
   this->battery_pub->publish(msg);
-  this->integrate_usage(current);
-  this->check_soc(voltage, current);
+  this->integrate_usage(current_);
+  this->check_soc(voltage_, current_);
+}
+
+void INA226_sensor::data_callback(float voltage, float current)
+{
+  voltage_ = voltage;
+  current_ = current;
+  // std::cout << "INA226 data: " << current << " " << voltage << std::endl;
+  this->update();
+  this->device_timer->reset();
 }
 
 float INA226_sensor::calc_soc(float voltage)
@@ -82,6 +90,7 @@ float INA226_sensor::calc_soc(float voltage)
   return 1.00;
 }
 
+// TODO: Maybe remove,
 void INA226_sensor::integrate_usage(float current)
 {
   auto current_time = this->nh->now();
@@ -149,9 +158,9 @@ void INA226_sensor::shutdown_robot()
   exec("sudo shutdown now");
 }
 
-void INA226_sensor::shutdown_robot_cb(
-  const std::shared_ptr<std_srvs::srv::SetBool::Request> req,
-  std::shared_ptr<std_srvs::srv::SetBool::Response> res)
+void INA226_sensor::shutdown_robot_service_callback(
+  const std_srvs::srv::SetBool::Request::ConstSharedPtr req,
+  std_srvs::srv::SetBool::Response::SharedPtr res)
 {
   if (req->data) {
     this->shutdown_robot();

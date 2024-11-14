@@ -1,4 +1,8 @@
+#include <chrono>
 #include <functional>
+#include <thread>
+
+using namespace std::chrono_literals;
 
 #include <rclcpp/callback_group.hpp>
 
@@ -6,7 +10,10 @@
 
 using namespace std::placeholders;  // for _1, _2, _3...
 
+// TODO: USE TO DEVICE_TIMER
+
 // hiwonder bus
+// TODO: Maybe add a lock future, to prevent outputting warnings during other modules...?
 HiWonderBus_module::HiWonderBus_module(
   NodeData node_data, HiWonderBusData bus_data, std::shared_ptr<tmx_cpp::Modules> modules)
 : Mirte_module(
@@ -14,6 +21,7 @@ HiWonderBus_module::HiWonderBus_module(
     rclcpp::CallbackGroupType::MutuallyExclusive),
   data(bus_data)
 {
+  this->device_timer->cancel();
   this->logger = this->logger.get_child(data.get_device_class()).get_child(data.name);
 
   // Create a list of ID's
@@ -22,37 +30,45 @@ HiWonderBus_module::HiWonderBus_module(
 
   this->bus = std::make_shared<tmx_cpp::HiwonderServo_module>(
     this->data.uart_port, this->data.rx_pin, this->data.tx_pin, servo_ids,
-    std::bind(&HiWonderBus_module::position_cb, this, _1),
-    std::bind(&HiWonderBus_module::verify_cb, this, _1, _2),
-    std::bind(&HiWonderBus_module::range_cb, this, _1, _2, _3),
-    std::bind(&HiWonderBus_module::offset_cb, this, _1, _2));
+    std::bind(&HiWonderBus_module::position_cb, this, _1));
 
   modules->add_mod(this->bus);
 
   auto servo_group = this->data.group_name;
   if (!servo_group.ends_with('/')) servo_group.push_back('/');
 
+  std::this_thread::sleep_for(1.20s);
   for (auto servo_data : this->data.servos) {
-    this->servos.push_back(std::make_shared<Hiwonder_servo>(
-      node_data, servo_data, this->bus, servo_group, this->callback_group));
+    if (this->bus->verify_id(servo_data->id))
+      this->servos.push_back(std::make_shared<Hiwonder_servo>(
+        node_data, servo_data, this->bus, servo_group, bus_data.duration, this->callback_group));
+    else
+      RCLCPP_ERROR(
+        this->logger, "HiWonder Servo '%s' is ignored as its ID [%d] was not found.",
+        servo_data->name.c_str(), servo_data->id);
   }
 
   // Create Bus ROS services
   this->enable_all_servos_service = nh->create_service<std_srvs::srv::SetBool>(
     "servo/" + servo_group + "enable_all_servos",
-    std::bind(&HiWonderBus_module::enable_cb, this, _1, _2),
+    std::bind(&HiWonderBus_module::enable_service_callback, this, _1, _2),
     rclcpp::ServicesQoS().get_rmw_qos_profile(), this->callback_group);
 }
 
 // TODO: Make result actually Reflect reality
-bool HiWonderBus_module::enable_cb(
-  const std::shared_ptr<std_srvs::srv::SetBool::Request> req,
-  std::shared_ptr<std_srvs::srv::SetBool::Response> res)
+void HiWonderBus_module::enable_service_callback(
+  const std_srvs::srv::SetBool::Request::ConstSharedPtr req,
+  std_srvs::srv::SetBool::Response::SharedPtr res)
 {
-  this->bus->set_enabled_all(req->data);
-  res->success = true;
+  // // TODO: TEMP TEST
+  // std::cout << (int)bus->get_offset(4).value_or(99) <<std::endl;
+  // auto [min, max] = bus->get_range(4).value_or(std::make_tuple(0,0));
+  // std::cout << min << " | " << max <<std::endl;
+  // std::cout << bus->verify_id(4) << std::endl;
+  // // TODO: TEMP TEST
+
+  res->success = this->bus->set_enabled_all(req->data);
   res->message = req->data ? "Enabled" : "Disabled";
-  return true;
 }
 
 std::vector<std::shared_ptr<HiWonderBus_module>> HiWonderBus_module::get_hiwonder_modules(
@@ -67,35 +83,13 @@ std::vector<std::shared_ptr<HiWonderBus_module>> HiWonderBus_module::get_hiwonde
   return hiwonder_modules;
 }
 
-void HiWonderBus_module::position_cb(std::vector<tmx_cpp::HiwonderServo_module::Servo_pos> pos)
+void HiWonderBus_module::position_cb(
+  std::vector<std::tuple<uint8_t, tmx_cpp::HiwonderServo_module::Servo_pos>> pos)
 {
-  for (auto p : pos) {
-    // std::cout << "Servo: " << (int)p.id << " pos: " << p.angle << std::endl;
-    for (auto servo : this->servos) {
-      if (servo->servo_data->id == p.id) {
-        servo->position_cb(p);
-        // servo->servo_data->angle = p.pos;
-      }
-    }
+  for (auto & [idx, p] : pos) {
+    if (idx >= this->servos.size()) continue;
+    auto servo = this->servos[idx];
+    assert(servo->servo_data->id == p.id);
+    servo->position_cb(p);
   }
-}
-
-// Following 3 callbacks are probably never used, maybe use verify to check that
-// they exist
-void HiWonderBus_module::verify_cb(int id, bool status)
-{
-  RCLCPP_INFO(logger, "Servo: %d | status: %s", id, status ? "true" : "false");
-  // std::cout << "Servo: " << id << " status: " << status << std::endl;
-}
-
-void HiWonderBus_module::range_cb(int id, uint16_t min, uint16_t max)
-{
-  RCLCPP_INFO(logger, "Servo: %d | range: %u %u", id, min, max);
-  // std::cout << "Servo: " << id << " range: " << min << " " << max << std::endl;
-}
-
-void HiWonderBus_module::offset_cb(int id, uint16_t offset)
-{
-  RCLCPP_INFO(logger, "Servo: %d | offset: %u", id, offset);
-  // std::cout << "Servo: " << id << " offset: " << offset << std::endl;
 }

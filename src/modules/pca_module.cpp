@@ -22,6 +22,7 @@ PCA_Module::PCA_Module(
   NodeData node_data, PCAData pca_data, std::shared_ptr<tmx_cpp::Modules> modules)
 : Mirte_module(node_data, {pca_data.scl, pca_data.sda}, (ModuleData)pca_data)
 {
+  this->device_timer->cancel();
   tmx->setI2CPins(pca_data.sda, pca_data.scl, pca_data.port);
 
   this->pca9685 =
@@ -41,8 +42,8 @@ PCA_Module::PCA_Module(
 }
 
 void PCA_Module::set_multi_speed_service_callback(
-  const std::shared_ptr<mirte_msgs::srv::SetSpeedMultiple::Request> req,
-  std::shared_ptr<mirte_msgs::srv::SetSpeedMultiple::Response> res)
+  const mirte_msgs::srv::SetSpeedMultiple::Request::ConstSharedPtr req,
+  mirte_msgs::srv::SetSpeedMultiple::Response::SharedPtr res)
 {
   // TODO: Why is this a shared_ptr? (Probably unneccessary)
   std::shared_ptr<std::vector<tmx_cpp::PCA9685_module::PWM_val>> pwm_vals =

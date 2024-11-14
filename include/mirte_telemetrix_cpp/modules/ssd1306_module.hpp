@@ -2,11 +2,10 @@
 #include <filesystem>
 #include <optional>
 
-namespace fs = std::filesystem;
-
 #include <tmx_cpp/modules/SSD1306_oled.hpp>
 
 #include <mirte_telemetrix_cpp/modules/base_module.hpp>
+
 #include <mirte_telemetrix_cpp/parsers/modules/ssd1306_data.hpp>
 
 #include <mirte_msgs/srv/set_oled_file.hpp>
@@ -14,52 +13,57 @@ namespace fs = std::filesystem;
 #include <mirte_msgs/srv/set_oled_image_legacy.hpp>
 #include <mirte_msgs/srv/set_oled_text.hpp>
 
-class SSD1306_module : public Mirte_module
-{
-public:
-  SSD1306_module(
-    NodeData node_data, SSD1306Data oled_data, std::shared_ptr<tmx_cpp::Modules> modules);
+namespace fs = std::filesystem;
 
-  SSD1306Data data;
-  std::shared_ptr<tmx_cpp::SSD1306_module> ssd1306;
+class SSD1306_module : public Mirte_module {
+  public:
+    SSD1306_module(
+      NodeData node_data, SSD1306Data oled_data, std::shared_ptr<tmx_cpp::Modules> modules);
 
-  static std::vector<std::shared_ptr<SSD1306_module>> get_ssd1306_modules(
-    NodeData node_data, std::shared_ptr<Parser> parser, std::shared_ptr<tmx_cpp::Modules> modules);
+    SSD1306Data data;
+    std::shared_ptr<tmx_cpp::SSD1306_module> ssd1306;
 
-  bool set_text(std::string text);
-  bool set_image(uint8_t width, uint8_t height, uint8_t img_buffer[]);
-  bool set_image_from_path(fs::path path);
-  bool set_image_from_path(std::string path);
+    static std::vector<std::shared_ptr<SSD1306_module>> get_ssd1306_modules(
+      NodeData node_data, std::shared_ptr<Parser> parser,
+      std::shared_ptr<tmx_cpp::Modules> modules);
 
-private:
-  bool enabled = true;
-  std::optional<std::string> last_text;
+    bool set_text(std::string text);
+    bool set_image(uint8_t width, uint8_t height, uint8_t img_buffer[]);
+    bool set_image_from_path(fs::path path);
+    bool set_image_from_path(std::string path);
 
-  rclcpp::Service<mirte_msgs::srv::SetOLEDImageLegacy>::SharedPtr set_oled_service_legacy;
+    virtual void device_timer_callback() override;
 
-  rclcpp::Service<mirte_msgs::srv::SetOLEDText>::SharedPtr set_oled_text_service;
-  rclcpp::Service<mirte_msgs::srv::SetOLEDImage>::SharedPtr set_oled_image_service;
-  rclcpp::Service<mirte_msgs::srv::SetOLEDFile>::SharedPtr set_oled_file_service;
+  private:
+    bool enabled = true;
+    std::optional<std::string> last_text;
 
-  rclcpp::TimerBase::SharedPtr default_screen_timer;
+    // Only enabled if legacy is enabled in the config
+    // Service: oled/NAME/set_image_legacy
+    rclcpp::Service<mirte_msgs::srv::SetOLEDImageLegacy>::SharedPtr set_oled_service_legacy;
 
-  bool prewrite(bool is_default = false);
+    // Service: oled/NAME/set_text
+    rclcpp::Service<mirte_msgs::srv::SetOLEDText>::SharedPtr set_oled_text_service;
+    // Service: oled/NAME/set_image
+    rclcpp::Service<mirte_msgs::srv::SetOLEDImage>::SharedPtr set_oled_image_service;
+    // Service: oled/NAME/set_file
+    rclcpp::Service<mirte_msgs::srv::SetOLEDFile>::SharedPtr set_oled_file_service;
 
-  void set_oled_callback_legacy(
-    const std::shared_ptr<mirte_msgs::srv::SetOLEDImageLegacy::Request> req,
-    std::shared_ptr<mirte_msgs::srv::SetOLEDImageLegacy::Response> res);
+    bool prewrite(bool is_default = false);
 
-  void set_oled_text_callback(
-    const std::shared_ptr<mirte_msgs::srv::SetOLEDText::Request> req,
-    std::shared_ptr<mirte_msgs::srv::SetOLEDText::Response> res);
+    void set_oled_callback_legacy(
+      const mirte_msgs::srv::SetOLEDImageLegacy::Request::ConstSharedPtr req,
+      mirte_msgs::srv::SetOLEDImageLegacy::Response::SharedPtr res);
 
-  void set_oled_image_callback(
-    const std::shared_ptr<mirte_msgs::srv::SetOLEDImage::Request> req,
-    std::shared_ptr<mirte_msgs::srv::SetOLEDImage::Response> res);
+    void set_oled_text_callback(
+      const mirte_msgs::srv::SetOLEDText::Request::ConstSharedPtr req,
+      mirte_msgs::srv::SetOLEDText::Response::SharedPtr res);
 
-  void set_oled_file_callback(
-    const std::shared_ptr<mirte_msgs::srv::SetOLEDFile::Request> req,
-    std::shared_ptr<mirte_msgs::srv::SetOLEDFile::Response> res);
+    void set_oled_image_callback(
+      const mirte_msgs::srv::SetOLEDImage::Request::ConstSharedPtr req,
+      mirte_msgs::srv::SetOLEDImage::Response::SharedPtr res);
 
-  void default_screen_timer_callback();
+    void set_oled_file_callback(
+      const mirte_msgs::srv::SetOLEDFile::Request::ConstSharedPtr req,
+      mirte_msgs::srv::SetOLEDFile::Response::SharedPtr res);
 };

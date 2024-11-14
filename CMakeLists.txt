@@ -39,6 +39,7 @@ find_package(std_srvs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(color_util REQUIRED)
 find_package(cv_bridge REQUIRED)
+find_package(backward_ros REQUIRED)
 
 find_package(OpenCV REQUIRED COMPONENTS core imgcodecs)
 find_package(Boost REQUIRED COMPONENTS system thread)
@@ -93,6 +94,7 @@ add_executable(
   src/parsers/sensors/intensity_data.cpp
   src/parsers/sensors/sonar_data.cpp
   src/parsers/sensors/keypad_data.cpp
+  src/parsers/modules/adxl345_data.cpp
   src/parsers/modules/module_data.cpp
   src/parsers/modules/i2c_module_data.cpp
   src/parsers/modules/ina226_data.cpp
@@ -109,6 +111,7 @@ add_executable(
   src/sensors/intensity_monitor.cpp
   src/sensors/keypad_monitor.cpp
   src/sensors/sonar_monitor.cpp
+  src/modules/adxl345_module.cpp
   src/modules/base_module.cpp
   src/modules/hiwonder_module.cpp
   src/modules/hiwonder/hiwonder_servo.cpp
@@ -130,6 +133,7 @@ ament_target_dependencies(
   sensor_msgs
   color_util
   cv_bridge # DEPENDS
+  backward_ros
   # system_lib
 )
 
